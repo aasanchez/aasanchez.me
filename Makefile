@@ -1,5 +1,11 @@
-current-dir := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 SHELL = /bin/bash
+export CURRENT_DIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
+export PROJECT_ID=24996431
+export GITLAB_PASSWORD=${GITLAB_ACCESS_TOKEN}
+export GITLAB_USERNAME=aasanchez
+export TF_ADDRESS=https://gitlab.com/api/v4/projects/${PROJECT_ID}/terraform/state/unnamd
+export TF_VAR_AWS_ACCESS_KEY=$(shell aws configure get default.aws_secret_key_id)
+export TF_VAR_AWS_SECRET_KEY=$(shell aws configure get default.aws_secret_access_key)
 
 ifneq (,$(findstring xterm,${TERM}))
 	BLACK        := $(shell tput -Txterm setaf 0)
@@ -31,40 +37,20 @@ help:
 
 .PHONY: bootstrap
 bootstrap: ## is used solely for fulfilling dependencies of the project
-	@terraform init \
-    -backend-config="address=https://gitlab.com/api/v4/projects/24996431/terraform/state/unnamd" \
-    -backend-config="lock_address=https://gitlab.com/api/v4/projects/24996431/terraform/state/unnamd/lock" \
-    -backend-config="unlock_address=https://gitlab.com/api/v4/projects/24996431/terraform/state/unnamd/lock" \
-    -backend-config="username=aasanchez" \
-    -backend-config="password=$$AASANCHEZ_ACCESSTOKEN" \
-    -backend-config="lock_method=POST" \
-    -backend-config="unlock_method=DELETE" \
-    -backend-config="retry_wait_min=5"
-
-.PHONY: setup
-setup: bootstrap ## is used to set up a project in an initial state
-	@echo "is used to set up a project in an initial state"
-
-.PHONY: update
-update: ## is used to update the project after a fresh pull
-	@echo "is used to update the project after a fresh pull"
+	@source $(CURRENT_DIR)/scripts/terraform.sh && terraformInit
 
 .PHONY: server
-server: setup ## is used to start the application
-	@echo "is used to start the application"
+server: bootstrap ## is used to start the application
+	@terraform apply
 
 .PHONY: test
-test: ## is used to run the test suite of the application
-	@echo "is used to run the test suite of the application"
-
-.PHONY: cibuild
-cibuild: ## is used for your continuous integration server
-	@echo "is used for your continuous integration server"
-
-.PHONY: console
-console: ## is used to open a console for your application
-	@echo "is used to open a console for your application"
+test: bootstrap ## is used to run the test suite of the application
+	@terraform validate
 
 .PHONY: clean
 clean: ## is used to reset the infrastructure o an inditial state
-	@echo "is used to reset the infrastructure o an inditial state"
+	@rm -rf .terraform/
+
+.PHONY: destroy
+destroy: ## is used to reset the infrastructure o an inditial state
+	@terraform destroy -force

@@ -15,6 +15,5 @@ provider "aws" {
 
 terraform {
   backend "http" {
-
   }
 }
