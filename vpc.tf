@@ -1,6 +1,6 @@
 # VPC
 resource "aws_vpc" "main" {
-  cidr_block           = var.vpc_cidr_block
+  cidr_block           = var.VPC_CIDR_BLOCK
   enable_dns_hostnames = true
 }
 
@@ -22,8 +22,8 @@ resource "aws_route_table" "main_public" {
 # DMZ
 resource "aws_subnet" "dmz" {
   vpc_id            = aws_vpc.main.id
-  cidr_block        = var.dmz_cidr_block
-  availability_zone = var.az
+  cidr_block        = var.DMZ_CIDR_BLOCK
+  availability_zone = var.AZ
 }
 
 # Route Table Assoc for DMZ

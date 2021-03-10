@@ -1,7 +1,9 @@
 image: registry.gitlab.com/gitlab-org/terraform-images/stable:latest
 variables:
-  TF_ROOT: ${CI_PROJECT_DIR}
   TF_ADDRESS: ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/terraform/state/${CI_PROJECT_NAME}
+  TF_ROOT: ${CI_PROJECT_DIR}
+  TF_VAR_DMZ_CIDR_BLOCK: "10.136.1.0/24"
+  TF_VAR_VPC_CIDR_BLOCK: "10.136.0.0/16"
 
 cache:
   key: ${CI_COMMIT_REF_SLUG}-terraform-cache
