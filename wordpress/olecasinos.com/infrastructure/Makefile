@@ -1,5 +1,11 @@
-export CURRENT_DIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
-SHELL = /bin/bash
+export PROJECT_ID=24996431
+export GITLAB_PASSWORD=${GITLAB_ACCESS_TOKEN}
+export GITLAB_USERNAME=aasanchez
+export TF_ADDRESS=https://gitlab.com/api/v4/projects/${PROJECT_ID}/terraform/state/unnamd
+export TF_VAR_AWS_ACCESS_KEY=$(shell aws configure get default.aws_secret_key_id)
+export TF_VAR_AWS_SECRET_KEY=$(shell aws configure get default.aws_secret_access_key)
+CURRENT_DIR ?= ../../..
+
 
 ifneq (,$(findstring xterm,${TERM}))
 	BLACK        := $(shell tput -Txterm setaf 0)
@@ -25,33 +31,28 @@ endif
 
 default: server
 
+.PHONY: help
 help:
 	@grep -E '^[a-zA-Z_0-9%-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "${GREEN}%-12s${RESET} %s\n", $$1, $$2}'
 
 .PHONY: bootstrap
 bootstrap: ## is used solely for fulfilling dependencies of the project
-	cd wordpress/olecasinos.com/infrastructure && $(MAKE) bootstrap
-
-.PHONY: setup
-setup: ## is used to set up a project in an initial state
-	@echo "is used to set up a project in an initial state"
-
-.PHONY: update
-update: ## is used to update the project after a fresh pull
-	@echo "is used to update the project after a fresh pull"
+	@echo "Olecasinos: ${RED}boostrap${RESET}"
+	@source $(CURRENT_DIR)/scripts/terraform.sh && terraformInit "$(CURRENT_DIR)/wordpress/olecasinos.com/infrastructure"
 
 .PHONY: server
-server: ## is used to start the application
-	cd wordpress/olecasinos.com/infrastructure && $(MAKE)
+server: bootstrap ## is used to start the application
+	@echo "Olecasinos: ${RED}server${RESET}"
+	@terraform apply
 
 .PHONY: test
-test: ## is used to run the test suite of the application
-	cd wordpress/olecasinos.com/infrastructure && $(MAKE) test
-
-.PHONY: destroy
-destroy: ## is used to destroy your application
-	cd wordpress/olecasinos.com/infrastructure && $(MAKE) destroy
+test: bootstrap ## is used to run the test suite of the application
+	@terraform validate
 
 .PHONY: clean
 clean: ## is used to reset the infrastructure o an inditial state
-	@echo "is used to reset the infrastructure o an inditial state"
+	@rm -rf .terraform/
+
+.PHONY: destroy
+destroy: ## is used to reset the infrastructure o an inditial state
+	@terraform destroy -force

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 function terraformInit(){
-  if [ ! -d "$CURRENT_DIR"/.terraform ]; then 
+  if [ ! -d "$1"/.terraform ]; then 
     terraform init -backend-config=address="${TF_ADDRESS}" \
     -backend-config=lock_address="${TF_ADDRESS}"/lock \
     -backend-config=unlock_address="${TF_ADDRESS}"/lock \
