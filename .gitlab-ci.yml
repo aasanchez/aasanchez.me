@@ -1,5 +1,6 @@
 stages:
   - prepare
+  - linting
   - validate
   - build
   - deploy
@@ -8,4 +9,5 @@ variables:
   NODE_ENV: "test"
 
 include:
+  - local: .gitlab/ci/shellcheck.gitlab-ci.yml
   - local: wordpress/olecasinos.com/infrastructure/.gitlab-ci.yml

@@ -1,0 +1,5 @@
+shellcheck:
+  stage: linting
+  image: registry.gitlab.com/pipeline-components/shellcheck:latest
+  script:
+    - shellcheck ${CI_PROJECT_DIR}/scripts/terraform.sh
