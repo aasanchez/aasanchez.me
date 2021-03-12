@@ -30,7 +30,7 @@ help:
 
 .PHONY: bootstrap
 bootstrap: ## is used solely for fulfilling dependencies of the project
-	cd wordpress/olecasinos.com/infrastructure && $(MAKE) bootstrap
+	cd website/infrastructure && $(MAKE) bootstrap
 
 .PHONY: setup
 setup: ## is used to set up a project in an initial state
@@ -42,15 +42,15 @@ update: ## is used to update the project after a fresh pull
 
 .PHONY: server
 server: ## is used to start the application
-	cd wordpress/olecasinos.com/infrastructure && $(MAKE)
+	cd website/infrastructure && $(MAKE)
 
 .PHONY: test
 test: ## is used to run the test suite of the application
-	cd wordpress/olecasinos.com/infrastructure && $(MAKE) test
+	cd website/infrastructure && $(MAKE) test
 
 .PHONY: destroy
 destroy: ## is used to destroy your application
-	cd wordpress/olecasinos.com/infrastructure && $(MAKE) destroy
+	cd website/infrastructure && $(MAKE) destroy
 
 .PHONY: clean
 clean: ## is used to reset the infrastructure o an inditial state

@@ -1,3 +1,6 @@
+stages:
+  - linting
+
 shellcheck:
   stage: linting
   image: registry.gitlab.com/pipeline-components/shellcheck:latest

@@ -1,3 +1,3 @@
-# Unnamd
+# aasanchez.me
 
-[![pipeline status](https://gitlab.com/aasanchez/unnamd/badges/master/pipeline.svg)](https://gitlab.com/aasanchez/unnamd/-/commits/master)
+[![pipeline status](https://gitlab.com/aasanchez/aasanchez.me/badges/master/pipeline.svg)](https://gitlab.com/aasanchez/aasanchez.me/-/commits/master)

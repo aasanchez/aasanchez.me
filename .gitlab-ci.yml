@@ -10,4 +10,4 @@ variables:
 
 include:
   - local: .gitlab/ci/shellcheck.gitlab-ci.yml
-  - local: wordpress/olecasinos.com/infrastructure/.gitlab-ci.yml
+  - local: website/infrastructure/.gitlab-ci.yml

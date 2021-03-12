@@ -1,5 +1,5 @@
 resource "aws_route53_zone" "prod" {
-  name = "olecasinos.com"
+  name = "aasanchez.me"
   tags = {
     Environment = "production"
   }

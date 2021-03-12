@@ -1,10 +1,10 @@
 export PROJECT_ID=24996431
 export GITLAB_PASSWORD=${GITLAB_ACCESS_TOKEN}
 export GITLAB_USERNAME=aasanchez
-export TF_ADDRESS=https://gitlab.com/api/v4/projects/${PROJECT_ID}/terraform/state/unnamd
+export TF_ADDRESS=https://gitlab.com/api/v4/projects/${PROJECT_ID}/terraform/state/website
 export TF_VAR_AWS_ACCESS_KEY=$(shell aws configure get default.aws_secret_key_id)
 export TF_VAR_AWS_SECRET_KEY=$(shell aws configure get default.aws_secret_access_key)
-CURRENT_DIR ?= ../../..
+CURRENT_DIR ?= ../..
 
 
 ifneq (,$(findstring xterm,${TERM}))
@@ -37,12 +37,12 @@ help:
 
 .PHONY: bootstrap
 bootstrap: ## is used solely for fulfilling dependencies of the project
-	@echo "Olecasinos: ${RED}boostrap${RESET}"
-	@source $(CURRENT_DIR)/scripts/terraform.sh && terraformInit "$(CURRENT_DIR)/wordpress/olecasinos.com/infrastructure"
+	@echo "website: ${RED}boostrap${RESET}"
+	@source $(CURRENT_DIR)/scripts/terraform.sh && terraformInit "$(CURRENT_DIR)/website/infrastructure"
 
 .PHONY: server
 server: bootstrap ## is used to start the application
-	@echo "Olecasinos: ${RED}server${RESET}"
+	@echo "website: ${RED}server${RESET}"
 	@terraform apply
 
 .PHONY: test

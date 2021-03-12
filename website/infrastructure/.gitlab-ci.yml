@@ -1,0 +1,54 @@
+stages:
+  - prepare
+  - linting
+  - validate
+  - build
+  - deploy
+
+variables:
+  TF_ADDRESS: ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/terraform/state/website
+  TF_ROOT: ${CI_PROJECT_DIR}/website/infrastructure
+
+cache:
+  key: ${CI_COMMIT_REF_SLUG}-terraform-cache
+  paths:
+    - ${TF_ROOT}/.terraform
+
+before_script:
+  - cd ${TF_ROOT}
+
+terraform-website-init:
+  stage: prepare
+  image: registry.gitlab.com/gitlab-org/terraform-images/stable:latest
+  script:
+    - gitlab-terraform init
+
+terraform-website-validate:
+  stage: linting
+  image: registry.gitlab.com/gitlab-org/terraform-images/stable:latest
+  script:
+    - gitlab-terraform init
+    - gitlab-terraform validate
+
+terraform-website-plan:
+  stage: build
+  image: registry.gitlab.com/gitlab-org/terraform-images/stable:latest
+  script:
+    - gitlab-terraform plan
+    - gitlab-terraform plan-json
+  artifacts:
+    name: plan
+    paths:
+      - ${TF_ROOT}/plan.cache
+    reports:
+      terraform: ${TF_ROOT}/plan.json
+
+terraform-website-apply:
+  stage: deploy
+  image: registry.gitlab.com/gitlab-org/terraform-images/stable:latest
+  environment:
+    name: production
+  script:
+    - gitlab-terraform apply
+  dependencies:
+    - terraform-website-plan
